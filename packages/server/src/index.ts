@@ -1068,19 +1068,15 @@ export class App {
                     if (chatMessage) {
                         chatMessage.feedback = history[0].feedback
                         await chatMessageRepository.save(chatMessage)
-                        // Send a success response with status 200
                         res.status(200).json({ message: 'Success' })
                     } else {
-                        // Send an error response with status 404 (Not Found)
                         res.status(404).json({ error: 'ChatMessage not found' })
                     }
                 } else {
-                    // Send an error response with status 400 (Bad Request)
                     res.status(400).json({ error: 'Invalid request data' })
                 }
             } catch (error: any) {
                 console.error('Error updating ChatMessage:', error.message)
-                // Send an error response with status 500 (Internal Server Error)
                 res.status(500).json({ error: 'Internal Server Error' })
             }
         })
