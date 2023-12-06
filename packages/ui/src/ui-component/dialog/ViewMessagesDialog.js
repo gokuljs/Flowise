@@ -591,7 +591,7 @@ const ViewMessagesDialog = ({ show, dialogProps, onCancel }) => {
                                         </div>
                                     </div>
                                 )}
-                                {chatMessages && chatMessages.length > 1 && (
+                                {apiMessage && apiMessage.length > 0 && (
                                     <div
                                         style={{
                                             height: '80px',
