@@ -55,6 +55,7 @@ import { enqueueSnackbar as enqueueSnackbarAction, closeSnackbar as closeSnackba
 
 import 'views/chatmessage/ChatMessage.css'
 import 'react-datepicker/dist/react-datepicker.css'
+import DataCard from 'ui-component/cards/DataCard/DataCard'
 
 const DatePickerCustomInput = forwardRef(function DatePickerCustomInput({ value, onClick }, ref) {
     return (
@@ -389,6 +390,11 @@ const ViewMessagesDialog = ({ show, dialogProps, onCancel }) => {
         else dispatch({ type: HIDE_CANVAS_DIALOG })
         return () => dispatch({ type: HIDE_CANVAS_DIALOG })
     }, [show, dispatch])
+    const apiMessage = chatMessages.filter((item) => item.type === 'apiMessage')
+    const totalMessages = apiMessage.length
+    const messagesWithFeedback = apiMessage.filter((item) => item.feedback !== null).length
+    const positiveFeedback = apiMessage.filter((item) => item?.feedback?.feedBackType === 'POSITIVE').length
+    const negativeFeedBack = apiMessage.filter((item) => item?.feedback?.feedBackType === 'NEGATIVE').length
 
     const component = show ? (
         <Dialog
@@ -523,7 +529,13 @@ const ViewMessagesDialog = ({ show, dialogProps, onCancel }) => {
                             </div>
                         )}
                         {chatlogs && chatlogs.length > 0 && (
-                            <div style={{ flexBasis: '60%', paddingRight: '30px' }}>
+                            <div
+                                style={{
+                                    flexBasis: '60%',
+                                    paddingRight: '30px',
+                                    maxHeight: 'calc(100vh - 250px)'
+                                }}
+                            >
                                 {chatMessages && chatMessages.length > 1 && (
                                     <div style={{ display: 'flex', flexDirection: 'row' }}>
                                         <div style={{ flex: 1, marginLeft: '20px', marginBottom: '15px', marginTop: '10px' }}>
@@ -576,8 +588,42 @@ const ViewMessagesDialog = ({ show, dialogProps, onCancel }) => {
                                         </div>
                                     </div>
                                 )}
+                                {chatMessages && chatMessages.length > 1 && (
+                                    <div
+                                        style={{
+                                            height: '80px',
+                                            marginBottom: '5px',
+                                            paddingLeft: '20px',
+                                            display: 'flex',
+                                            justifyContent: 'flex-start',
+                                            alignItems: 'center',
+                                            gap: '0.75rem'
+                                        }}
+                                    >
+                                        <DataCard
+                                            label={'Data Rated'}
+                                            feedbackPercentage={(messagesWithFeedback / totalMessages) * 100}
+                                            messagesWithFeedback={messagesWithFeedback}
+                                            totalMessages={totalMessages}
+                                        />
+                                        <DataCard
+                                            label={'Thumbs Up'}
+                                            feedbackPercentage={(positiveFeedback / totalMessages) * 100}
+                                            messagesWithFeedback={positiveFeedback}
+                                            totalMessages={totalMessages}
+                                        />
+                                        <DataCard
+                                            label={'Thumbs Down'}
+                                            feedbackPercentage={(negativeFeedBack / totalMessages) * 100}
+                                            messagesWithFeedback={negativeFeedBack}
+                                            totalMessages={totalMessages}
+                                        />
+                                    </div>
+                                )}
+
                                 <div
                                     style={{
+                                        maxHeight: 'calc(100% - 130px)',
                                         marginLeft: '20px',
                                         border: '1px solid #e0e0e0',
                                         borderRadius: `${customization.borderRadius}px`
