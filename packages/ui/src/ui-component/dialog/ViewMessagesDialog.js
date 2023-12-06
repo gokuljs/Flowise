@@ -21,7 +21,8 @@ import {
     DialogTitle,
     ListItem,
     ListItemText,
-    Chip
+    Chip,
+    IconButton
 } from '@mui/material'
 import { useTheme } from '@mui/material/styles'
 import DatePicker from 'react-datepicker'
@@ -56,6 +57,8 @@ import { enqueueSnackbar as enqueueSnackbarAction, closeSnackbar as closeSnackba
 import 'views/chatmessage/ChatMessage.css'
 import 'react-datepicker/dist/react-datepicker.css'
 import DataCard from 'ui-component/cards/DataCard/DataCard'
+import ThumbDownIcon from '@mui/icons-material/ThumbDown'
+import ThumbUpIcon from '@mui/icons-material/ThumbUp'
 
 const DatePickerCustomInput = forwardRef(function DatePickerCustomInput({ value, onClick }, ref) {
     return (
@@ -717,6 +720,35 @@ const ViewMessagesDialog = ({ show, dialogProps, onCancel }) => {
                                                                     >
                                                                         {message.message}
                                                                     </MemoizedReactMarkdown>
+                                                                    {message.type === 'apiMessage' && message.feedback && (
+                                                                        <div
+                                                                            style={{
+                                                                                display: 'flex',
+                                                                                justifyContent: 'flex-end'
+                                                                            }}
+                                                                        >
+                                                                            <Tooltip
+                                                                                title={message.feedback.feedbackMessage}
+                                                                                placement='left-start'
+                                                                            >
+                                                                                <IconButton>
+                                                                                    {message?.feedback?.feedBackType === 'POSITIVE' ? (
+                                                                                        <ThumbUpIcon
+                                                                                            style={{
+                                                                                                fontSize: '16px'
+                                                                                            }}
+                                                                                        />
+                                                                                    ) : (
+                                                                                        <ThumbDownIcon
+                                                                                            style={{
+                                                                                                fontSize: '16px'
+                                                                                            }}
+                                                                                        />
+                                                                                    )}
+                                                                                </IconButton>
+                                                                            </Tooltip>
+                                                                        </div>
+                                                                    )}
                                                                 </div>
                                                                 {message.fileAnnotations && (
                                                                     <div style={{ display: 'block', flexDirection: 'row', width: '100%' }}>

@@ -66,7 +66,7 @@ const DataCard = ({ feedbackPercentage, messagesWithFeedback, totalMessages, lab
                 {label}
             </div>
             <div style={{ display: 'flex', justifyContent: 'flex-start', alignItems: 'center', gap: '0.25rem' }}>
-                <div style={percentageStyle}>{feedbackPercentage}%</div>
+                <div style={percentageStyle}>{feedbackPercentage.toFixed(2)}%</div>
                 <div style={ratioStyle}>
                     ({messagesWithFeedback}/{totalMessages})
                 </div>
