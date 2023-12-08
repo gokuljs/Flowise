@@ -1,6 +1,6 @@
 import { createPortal } from 'react-dom'
 import { useDispatch, useSelector } from 'react-redux'
-import { useState, useEffect, forwardRef } from 'react'
+import { useState, useEffect, forwardRef, useMemo } from 'react'
 import PropTypes from 'prop-types'
 import moment from 'moment'
 import rehypeMathjax from 'rehype-mathjax'
@@ -393,11 +393,11 @@ const ViewMessagesDialog = ({ show, dialogProps, onCancel }) => {
         else dispatch({ type: HIDE_CANVAS_DIALOG })
         return () => dispatch({ type: HIDE_CANVAS_DIALOG })
     }, [show, dispatch])
-    const apiMessage = chatMessages.filter((item) => item.type === 'apiMessage')
-    const totalMessages = apiMessage.length
-    const messagesWithFeedback = apiMessage.filter((item) => item.feedback !== null).length
-    const positiveFeedback = apiMessage.filter((item) => item?.feedback?.feedBackType === 'POSITIVE').length
-    const negativeFeedBack = apiMessage.filter((item) => item?.feedback?.feedBackType === 'NEGATIVE').length
+    const apiMessage = useMemo(() => chatMessages.filter((item) => item.type === 'apiMessage'), [chatMessages])
+    const totalMessages = useMemo(() => apiMessage.length, [apiMessage])
+    const messagesWithFeedback = useMemo(() => apiMessage.filter((item) => item.feedback !== null).length, [apiMessage])
+    const positiveFeedback = useMemo(() => apiMessage.filter((item) => item?.feedback?.feedBackType === 'POSITIVE').length, [apiMessage])
+    const negativeFeedBack = useMemo(() => apiMessage.filter((item) => item?.feedback?.feedBackType === 'NEGATIVE').length, [apiMessage])
 
     const component = show ? (
         <Dialog

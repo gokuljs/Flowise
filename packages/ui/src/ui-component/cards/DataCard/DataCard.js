@@ -80,4 +80,4 @@ DataCard.propTypes = {
     totalMessages: PropTypes.number.isRequired,
     label: PropTypes.string.isRequired
 }
-export default DataCard
+export default React.memo(DataCard)
