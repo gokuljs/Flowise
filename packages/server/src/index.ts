@@ -658,6 +658,7 @@ export class App {
         // Get assistant object
         this.app.get('/api/v1/openai-assistants/:id', async (req: Request, res: Response) => {
             const credentialId = req.query.credential as string
+
             const credential = await this.AppDataSource.getRepository(Credential).findOneBy({
                 id: credentialId
             })
@@ -1061,7 +1062,7 @@ export class App {
                     const chatMessage = await chatMessageRepository.findOne({
                         where: {
                             content: history[0]?.message,
-                            chatflowid
+                            chatId: req.body.chatId
                         }
                     })
 
