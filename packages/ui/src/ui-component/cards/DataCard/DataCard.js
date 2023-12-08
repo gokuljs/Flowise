@@ -3,8 +3,10 @@ import PropTypes from 'prop-types'
 import ThumbsUpDownIcon from '@mui/icons-material/ThumbsUpDown'
 import ThumbDownIcon from '@mui/icons-material/ThumbDown'
 import ThumbUpIcon from '@mui/icons-material/ThumbUp'
+import { useTheme } from '@emotion/react'
 
 const DataCard = ({ feedbackPercentage, messagesWithFeedback, totalMessages, label }) => {
+    const theme = useTheme()
     const cardStyle = {
         boxShadow: '0 2px 4px rgba(0,0,0,0.1)',
         borderRadius: '8px',
@@ -14,13 +16,13 @@ const DataCard = ({ feedbackPercentage, messagesWithFeedback, totalMessages, lab
         minWidth: '110px',
         width: 'fit-content',
         border: '1px solid #ccc',
-        backgroundColor: '#fff',
+        backgroundColor: theme.palette.darkSecondaryDark,
         textAlign: 'center'
     }
 
     const titleStyle = {
         fontSize: '14px',
-        color: '#616161',
+        color: theme.palette.grey700,
         fontWeight: 'bold',
         marginBottom: '8px',
         display: 'flex',
@@ -32,12 +34,12 @@ const DataCard = ({ feedbackPercentage, messagesWithFeedback, totalMessages, lab
     const percentageStyle = {
         fontWeight: 'bold',
         fontSize: '14px',
-        color: '#616161'
+        color: theme.palette.grey700
     }
 
     const ratioStyle = {
         fontSize: '14px',
-        color: '#616161',
+        color: theme.palette.grey700,
         fontWeight: '500'
     }
 

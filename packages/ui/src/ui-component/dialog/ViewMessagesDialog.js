@@ -536,7 +536,7 @@ const ViewMessagesDialog = ({ show, dialogProps, onCancel }) => {
                                 style={{
                                     flexBasis: '60%',
                                     paddingRight: '30px',
-                                    maxHeight: 'calc(100vh - 250px)'
+                                    maxHeight: 'calc(100vh - 270px)'
                                 }}
                             >
                                 {chatMessages && chatMessages.length > 1 && (
