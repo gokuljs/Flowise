@@ -1048,7 +1048,7 @@ export class App {
             upload.array('files'),
             (req: Request, res: Response, next: NextFunction) => getRateLimiter(req, res, next),
             async (req: Request, res: Response) => {
-                await this.buildChatflow(req, res, socketIO)
+                await this.buildChatflow(req, res, socketIO, false, false, req.body.id)
             }
         )
 
@@ -1062,10 +1062,10 @@ export class App {
                     const chatMessage = await chatMessageRepository.findOne({
                         where: {
                             content: history[0]?.message,
-                            chatId: req.body.chatId
+                            chatId: req.body.chatId,
+                            id: req.body.id
                         }
                     })
-
                     if (chatMessage) {
                         chatMessage.feedback = history[0].feedback
                         await chatMessageRepository.save(chatMessage)
@@ -1320,7 +1320,14 @@ export class App {
      * @param {boolean} isInternal
      * @param {boolean} isUpsert
      */
-    async buildChatflow(req: Request, res: Response, socketIO?: Server, isInternal: boolean = false, isUpsert: boolean = false) {
+    async buildChatflow(
+        req: Request,
+        res: Response,
+        socketIO?: Server,
+        isInternal: boolean = false,
+        isUpsert: boolean = false,
+        userId?: string
+    ) {
         try {
             const chatflowid = req.params.id
             let incomingInput: IncomingInput = req.body
@@ -1526,7 +1533,8 @@ export class App {
                 sessionId = result.assistant.threadId
             }
 
-            const userMessage: Omit<IChatMessage, 'id'> = {
+            const userMessage: Partial<IChatMessage> = {
+                ...(userId ? { id: userId } : {}), // Include 'id' only if 'userId' is a non-empty string
                 role: 'userMessage',
                 content: incomingInput.question,
                 chatflowid,
@@ -1555,14 +1563,16 @@ export class App {
             if (result?.sourceDocuments) apiMessage.sourceDocuments = JSON.stringify(result.sourceDocuments)
             if (result?.usedTools) apiMessage.usedTools = JSON.stringify(result.usedTools)
             if (result?.fileAnnotations) apiMessage.fileAnnotations = JSON.stringify(result.fileAnnotations)
-            await this.addChatMessage(apiMessage)
-
+            const savedApiMessage = await this.addChatMessage(apiMessage)
             logger.debug(`[server]: Finished running ${nodeToExecuteData.label} (${nodeToExecuteData.id})`)
 
             // Only return ChatId when its Internal OR incoming input has ChatId, to avoid confusion when calling API
             if (incomingInput.chatId || isInternal) result.chatId = chatId
 
-            return res.json(result)
+            return res.json({
+                ...result,
+                id: savedApiMessage.id
+            })
         } catch (e: any) {
             logger.error('[server]: Error:', e)
             return res.status(500).send(e.message)
